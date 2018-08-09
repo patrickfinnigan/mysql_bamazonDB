@@ -1,0 +1,23 @@
+{
+  "name": "mysql_bamazondb",
+  "version": "1.0.0",
+  "description": "Using MySQL to make a mockup database",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrickfinnigan/mysql_bamazonDB.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/patrickfinnigan/mysql_bamazonDB/issues"
+  },
+  "homepage": "https://github.com/patrickfinnigan/mysql_bamazonDB#readme",
+  "dependencies": {
+    "inquirer": "^6.1.0",
+    "mysql": "^2.16.0"
+  }
+}
