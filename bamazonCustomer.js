@@ -57,7 +57,8 @@ Please enter the ID number of the item you wish to buy.`,
                         const quantityMath = itemStock - wantedStock;
                         // console.log(quantityMath);
 
-                        let purchaseUpdate = "UPDATE bamazondb.market SET stock_quantity =" + quantityMath + "WHERE stock_quantity =" + res[parseInt(answer.action) - 1].stock_quantity;
+                        // let purchaseUpdate = "UPDATE bamazonDB.market SET stock_quantity = " + quantityMath + "WHERE id = " + res[parseInt(answer.action) - 1].id;
+                        let purchaseUpdate = "UPDATE bamazonDB.market SET stock_quantity =" + quantityMath + "WHERE id =" + parseInt(answer.action) - 1;
                         database.query(purchaseUpdate, function (err, res) {
                             if (err) throw err;
                             console.log(res.affectedRows + "Stock Updated!");
