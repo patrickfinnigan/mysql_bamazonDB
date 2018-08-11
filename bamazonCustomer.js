@@ -49,12 +49,22 @@ Please enter the ID number of the item you wish to buy.`,
                         id: purchase.action
                     }, function (err, res) {
                         if (err) throw err;
-                        const quantityMath = res[parseInt(answer.action) - 1].stock_quantity - parseInt(answer.purchase);
-                        console.log(quantityMath);
+                        let wantedStock = parseInt(purchase.quantity);
+                        // so the way this let function works is that the inquirer function of "then(purchase)" is the the function we are working on, and quanitity is how the purchase function references the inquirer's quantity property. whenever you want to use the input element of the inquirer prompt, you have to reference the inquirer's bottom function and have that function reference the input of that inquirer function
+                        // console.log(wantedStock);
+                        let itemStock = res[parseInt(answer.action) - 1].stock_quantity;
+                        // console.log(itemStock);
+                        const quantityMath = itemStock - wantedStock;
+                        // console.log(quantityMath);
+
+                        let purchaseUpdate = "UPDATE bamazondb.market SET stock_quantity =" + quantityMath + "WHERE stock_quantity =" + res[parseInt(answer.action) - 1].stock_quantity;
+                        database.query(purchaseUpdate, function (err, res) {
+                            if (err) throw err;
+                            console.log(res.affectedRows + "Stock Updated!");
+                        });
                     }
-                    // let purchaseUpdate = "UPDATE bamazondb.market SET stock_quantity = stock_quantity WHERE address = " + 
                 )
-                process.exit()
+                // process.exit()
             })
         })
     });
