@@ -46,26 +46,33 @@ Please enter the ID number of the item you wish to buy.`,
                 // since the given id number will come in as a string, you have to convert it to an integer in order for the console.log action to read it and match that number with the proper product. that is why we use parseInt() around the given answer.action response
             }).then(purchase => {
                 database.query(query, {
-                        id: purchase.action
-                    }, function (err, res) {
-                        if (err) throw err;
-                        let wantedStock = parseInt(purchase.quantity);
-                        // so the way this let function works is that the inquirer function of "then(purchase)" is the the function we are working on, and quanitity is how the purchase function references the inquirer's quantity property. whenever you want to use the input element of the inquirer prompt, you have to reference the inquirer's bottom function and have that function reference the input of that inquirer function
-                        // console.log(wantedStock);
-                        let itemStock = res[parseInt(answer.action) - 1].stock_quantity;
-                        // console.log(itemStock);
-                        const quantityMath = itemStock - wantedStock;
-                        // console.log(quantityMath);
+                    id: purchase.action
+                }, function (err, res) {
+                    if (err) throw err;
+                    let wantedStock = parseInt(purchase.quantity);
+                    // so the way this let function works is that the inquirer function of "then(purchase)" is the the function we are working on, and quanitity is how the purchase function references the inquirer's quantity property. whenever you want to use the input element of the inquirer prompt, you have to reference the inquirer's bottom function and have that function reference the input of that inquirer function
+                    // console.log(wantedStock);
+                    let itemStock = res[parseInt(answer.action) - 1].stock_quantity;
+                    // console.log(itemStock);
+                    const quantityMath = itemStock - wantedStock;
+                    // console.log(quantityMath);
 
-                        // let purchaseUpdate = "UPDATE bamazonDB.market SET stock_quantity = " + quantityMath + "WHERE id = " + res[parseInt(answer.action) - 1].id;
-                        let purchaseUpdate = "UPDATE bamazonDB.market SET stock_quantity =" + quantityMath + "WHERE id =" + parseInt(answer.action) - 1;
-                        database.query(purchaseUpdate, function (err, res) {
+                    // in order to catch the stock for this item before purchasing, we have to place an if/else statement AROUND the operation that updates the server. we want to check if the wanted stock does not make the item stock a negative number. to do this, we have the purcahseUpdate function be INSIDE the if/else statement that will check the math. if the purchaseUpdate operation was above the if/else that checks the math, the program will perform the server update, OUSIDE of the math that does the stock check. this way we can stop the purchaseUpdate from putting a negative stock number in the server by redirecting the program path away from it if the math would make a negative number
+                    if (quantityMath < 0) {
+                        // stop(purchaseUpdate);
+                        console.log("Not enough in stock!");
+                        process.exit();
+                    } else {
+                        let purchaseUpdate = "UPDATE bamazonDB.market SET stock_quantity = " + quantityMath + " WHERE id = " + parseInt(answer.action);
+                        // console.log(purchaseUpdate);
+                        database.query(purchaseUpdate, function (err) {
                             if (err) throw err;
-                            console.log(res.affectedRows + "Stock Updated!");
+                            console.log("Stock Updated!");
+                            process.exit();
                         });
+
                     }
-                )
-                // process.exit()
+                })
             })
         })
     });
